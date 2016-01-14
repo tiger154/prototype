@@ -1,2 +1,2 @@
 # prototype
-read mem for prototype
+read me for prototype
