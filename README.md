@@ -1,6 +1,6 @@
 # prototype
 
-It's a prototype MVC project which include to explain how it works.
+It's a prototype MVC project which includes to explain how it works.
 
 /Index.php : main start file
 /Dispatcher.php : main start class
