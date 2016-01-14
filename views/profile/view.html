@@ -1,0 +1,109 @@
+<div id="vine_left">
+    {include file="profile/menu.html"}
+</div>
+
+<div id="vine_center" class="profile">
+    <div id="profile">
+        {if {$profile->hasHeaderImage()}} <img class="img_header" src="{$profile->getHeaderImage()}" /> {else} <span class="img_header black"> </span> {/if}
+        <img class="img_user" src="{$profile->getProfileImage()}" />
+        <div class="actions">
+            {if $profile->isMyProfile()}
+                <span><a href="/profile/edit/{$profile->profile_url}"><i class="fa fa-pencil fa-lg"></i> Edit profile</a></span>
+                <span><a href="/profile/settings/{$profile->profile_url}"><i class="fa fa-cog fa-lg"></i> {'settings'|lang|capitalize}</a></span>
+            {else}
+                <span><a class="message tooltip animate" data-tip="{'message me'|lang|capitalize}" data-uid="{$profile->user_id}" href="#message"><i class="flaticon-envelope32"></i> {'message me'|lang|capitalize}</a></span>
+                <span>
+                   <a href="#eye" class="eyeing tooltip animate" title="{if $profile->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}" data-uid="{$profile->user_id}" data-tip="{if $profile->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}">
+                    <img class="{if $profile->isEyeingMe()} checked{/if}" src="/images/_.gif"/><span> {if $profile->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}</span></a>
+                </span>
+                {if $profile->canBeEndorsed() && !$profile->isEndorsedByMe()}
+                <span class="endorse"><a href="#endorse" class="tooltip animate" title="{'endorse me'|lang|capitalize}" data-uid="{$profile->user_id}" data-tip="{'endorse me'|lang|capitalize}"><i class="fa fa-check"></i> {'endorse me'|lang|capitalize}</a></span>
+                {/if}
+                <span><a href="#nudge" class="nudge tooltip animate" data-tip="{'send pulse'|lang|capitalize}" data-uid="{$profile->user_id}"><i class="fa fa-bolt"></i> {'send pulse'|lang|capitalize}</a></span>
+                {*if $profile->showProfile()*}
+                <span><a class="about tooltip animate" href="#about" data-tip="{'about me'|lang|capitalize}"><i class="fa fa-info"></i> {'about me'|lang|capitalize}</a></span>
+                {*/if*}
+                {*if $profile->isFriendAllowed()*}
+                <span>
+                    <a href="#buddy" class="button_friends click_to_add_buddy tooltip animate"{if $profile->isFriend()=='accepted'||$profile->isFriend()=='pending'} disabled="disabled"{/if} data-checkout="{$profile->user_id}" data-tip="{if $profile->isFriend()=='accepted'}{'were_friends'|lang}{elseif $profile->isFriend()=='pending'}{'friends_request_sent'|lang}{else}{'add_to_friends'|lang}{/if}"><i class="flaticon-user163{if $profile->isFriend()=='accepted'} accepted{/if}{if $profile->isFriend()=='pending'} pending{/if}"></i> {if $profile->isFriend()=='accepted'}{'were_friends'|lang}{elseif $profile->isFriend()=='pending'}{'friends_request_sent'|lang}{else}{'add_to_friends'|lang}{/if}</a>
+                </span>
+                {*/if*}
+            {/if}
+        </div>
+        <div class="details">
+            <h3>{$profile->name}{if !$profile->isMyProfile()} <a href="#" class="eyeing tooltip animate" title="{if $profile->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}" data-uid="{$profile->user_id}" data-tip="{if $profile->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}">
+            <img class="{if $profile->isEyeingMe()} checked{/if}" src="/images/_.gif"/></a>{/if}</h3>
+            <span {if $profile->canBeEndorsed() && !$profile->isEndorsedByMe()}class="endorse"{/if}><i class="fa fa-check"></i> {$profile->getEndorseCount()} {'endorsed me'|lang}</span>
+            <span><i class="fa fa-home"></i><strong> Living in</strong>: {$profile->getCity('short', $profile->city)}</span>
+            {if $preferences.is_traveling eq '1' }
+            <span><i class="fa fa-plane"></i><strong> Traveling in</strong>:  {$profile->getCity('short', $profile->city_of_travel)}</span>
+            {/if}
+        </div>
+        {* {if !$profile->isMyProfile() && $profile->showProfile()} *}
+        <div id="about" style="display:none;">
+            <i class="fa fa-times fa-2x"></i>
+            <h3>{'about_me'|lang}</h3>
+            {$about = ['My Name' => $profile->name,
+            'I live in' => $profile->city,
+            'City I post in' => $profile->city_feed,
+            'My Birthday' => $profile->dob,
+            'Born in' => $profile->city_of_birth,
+            'Gender' => $profile->gender,
+            'Sexual Orientation' => $profile->sexual_orientation,
+            'Relationship Status' => $profile->relationship_status,
+            'Type' => 'types',
+            'Work' => 'work',
+            'I speak' => 'languages',
+            "I'm looking for" => 'looking for',
+            'I like' => 'i like'
+                ]}
+            {foreach from=$about key=label item=value}
+                <div><b>{$label}:</b> {$value}</div>
+            {/foreach}
+            <strong>My name: {$profile->name}</strong>
+            <strong>{'profile_i_like'|lang}</strong>
+            {if $profile->i_like}<ul>{foreach from=$profile->i_like item=o}<li>{$o.label}</li>{/foreach}</ul>{else}{'not_set'|lang}{/if}
+            <strong>{'profile_contact_me_for'|lang}</strong>{if $profile->contact_me_for}<ul>{foreach from=$profile->contact_me_for item=0}<li>{$o.label}</li>{/foreach}</ul>{else}{'not_set'|lang}{/if}
+            <strong>{'profile_contact_me_allowed'|lang}</strong>
+            {if $profile->contact_who}<ul>{foreach from=$profile->contact_who item=o}<li>{$o.label}</li>{/foreach}</ul>{else}{'not_set'|lang}{/if}
+            <strong>{'profile_travellers'|lang}</strong>
+            {if $profile->travellers}<ul>{foreach from=$profile->travellers item=o}<li>{$o.label}</li>{/foreach}</ul>{else}{'not_set'|lang}{/if}
+            <strong>{'profile_about_me'|lang}</strong>
+            {if $profile->about_me}<p>{$profile->about_me}</p>{else}{'not_set'|lang}{/if}
+        </div>
+        {* {/if} *}
+    </div>
+    <div id="posts">
+        {include file="central/posts.html"}
+    </div>
+    <div id="appearing_thing" style="display:none;"><i class="fa fa-refresh fa-spin"></i></div>
+</div>
+
+<div id="vine_right">
+    {include file="ads/rotate.html"}
+</div>
+
+
+<script type="text/javascript" >
+    var post_offset={$post_offset};
+    var request_url = '{$smarty.server.REQUEST_URI}';
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#profile .actions .about, #profile #about i').on("click", function() {
+            $('#profile #about').slideToggle('fast');
+            return false;
+        });
+    });
+</script>
+
+<link href="/css/video-js.css" rel="stylesheet">
+<script type="text/javascript" src="/js/video/video.js"></script>
+<script type="text/javascript" src="/js/video/plugins/youtube.js"></script>
+<script type="text/javascript" src="/js/video/plugins/vimeo.js"></script>
+<script type="text/javascript" src="/js/video/plugins/soundcloud.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.collapser.min.js"></script>
+<script type="text/javascript" src="/js/posts.js"></script>
+<script type="text/javascript" src="/js/comments.js"></script>
+<script type="text/javascript" src="/js/users.js"></script>

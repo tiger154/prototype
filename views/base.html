@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+    <meta charset="{$smarty.const.CHARSET}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>QueeraZ!{if $title} - {$title}{/if}</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <!-- page css -->
+    <link rel="stylesheet" type="text/css" href="/css/default.css?v={$cssversion}" />
+    <link rel="stylesheet" type="text/css" href="/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mainLeft.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mainCenterHeader.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mainRight.css" />
+    <link rel="stylesheet" type="text/css" href="/css/events.css" />
+    <link rel="stylesheet" type="text/css" href="/css/posts.css" />
+    <link rel="stylesheet" type="text/css" href="/css/postsActions.css" />
+    <link rel="stylesheet" type="text/css" href="/css/users.css" />
+    <link rel="stylesheet" type="text/css" href="/css/userProfile.css" />
+    <link rel="stylesheet" type="text/css" href="/css/pages.css" />
+    <link rel="stylesheet" type="text/css" href="/css/pageProfile.css" />
+    <link rel="stylesheet" type="text/css" href="/css/search.css" />
+    <link rel="stylesheet" type="text/css" href="/css/profiler.css" />
+    <!-- third party css -->
+    <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="/css/jquery-ui.theme.css" />
+    <link rel="stylesheet" type="text/css" href="/css/jquery.fancybox.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dropit.css" />
+    <link rel="stylesheet" type="text/css" href="/css/slider.css" />
+    <!-- fonts / icons -->
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome.min.css?v={$cssversion}" />
+    <link rel="stylesheet" type="text/css" href="/fonts/flaticons/flaticon.css?v={$cssversion}" />
+    <!-- javascript -->
+    <script src="/js/jquery/jquery.min.js?v={$cssversion}"></script>
+    <script src="/js/jquery/jquery-ui.min.js?v={$cssversion}"></script>
+    <script src="/js/jquery/jquery-ui.triggeredAutocomplete.1.4.5.js"></script>
+    <script src="/js/plugins/jquery.fancybox.pack.js"></script>
+    <script src="/js/plugins/dropit.js"></script>
+    <script src="/js/plugins/jquery.form.js"></script>
+    <script src="/js/plugins/jquery.blockUI.js"></script>
+    <script src="/js/plugins/slider.js"></script>
+    <script src="/js/friends.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/tags.js"></script>
+    <script src="/js/mms.js"></script>
+    <script src="/js/translate.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="http://microsofttranslator.com/ajax/v3/widgetv3.ashx" type="text/javascript"></script>
+    <script type="text/javascript">var no_web_content = false;</script>
+</head>
+<body{if $class}class="{$class}"{/if}>
+    <div id="top">
+        <div>
+            <div id="logo">
+                <a href="/" title="Back to the feed"><img class="logo" src="/images/logo-Q.png" alt="Queeraz" title="Queeraz"></a>
+            </div>
+            <div id="headerBarSearch">
+                <input type="search" id="headerBarSearchInput"/>
+            </div>
+            <ul id="settings" translate=no>
+                <li>
+                    <a href="{$user->getProfileUrl()}">{$user->getName()}</a><img id="button_name_menu" width="7" height="7" src="/images/expand.gif" />
+                    <ul id="name_menu">
+                        <li><a href="#"></a>Advertise</li>
+                        <li><a href="#"></a>Queeraz Givez</li>
+                        <li><a href="#"></a>Jobz</li>
+                        <li><a href="#"></a>Rulez</li>
+                        <li><a href="#"></a>Legalz</li>
+                        <li><a href="#"></a>What's new</li>
+                        <li><a href="#"></a>Contact</li>
+                        <li><a href="#"></a>--------</li>
+
+                        {if $user->getUserPages()}
+                        <li><a href="#"></a>Use Queer az..
+                            <ul>
+                                {foreach from=$user->getUserPages() item=page}
+                                <li><a href="/?switchuser={$page['pid']}"></a>{$page['name']}</li>
+                                {/foreach}
+                            </ul>
+                        </li>
+                        {/if}
+                        <li><a href="/profile/settings/{$user->profile_url}"></a>Settings</li>
+                        <li><a href="/?logout" title="Log out">Log out</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div id="notify_area">
+                <div class="notifier">
+                    {if $user->hasNewMessages()}<span class="notify_count notify_visible message">{$user->getNewMessageCount()}</span>{/if}
+                    <div class="notify_circle" title="Incoming messages"><a href="/messages/"><i class="flaticon-envelope32"></i></a></div>
+                </div>
+                <div class="notifier">
+                    <span class="notify_count{if $user->getPendingFriendsCount()} notify_visible{/if}">{$user->getPendingFriendsCount()}</span>
+                    <div class="notify_circle" id="notify_button_friends" title="Friend requests"><i class="flaticon-user163"></i></div>
+                </div>
+                <div class="notifier">
+                    <span class="notify_count{if $user->getNotificationsCount()} notify_visible{/if}">{$user->getNotificationsCount()}</span>
+                    <div class="notify_circle" id="notify_button_notifications" title="Notifications"><i class="flaticon-flag55"></i></div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end top -->
+
+    <div id="container">
+        <div id="header" style="position: relative;">
+            <h1>QUEERAZ!</h1>
+            <h2>your view of the queer world</h2>
+            <div id="header_right">{$header_right}</div>
+        </div>
+        <div id="body">{$body}<br /></div>
+        <div id="left_filler" class="filler_bg"></div>
+        <div id="right_filler" class="filler_bg"></div>
+        <div id="footer_main"></div>
+    </div> <!-- end container -->
+
+    <div id="notifications">
+        {foreach $user->getNotifications() item=n}
+        <div class="info">
+            <img src="{$n.img}" target="_blank">
+            <span class="name"><a href="{$n.url}" target="_blank">{$n.name}</a></span>
+            <span class="message"><a href="{$n.link}">{$n.message}</a></span>
+        </div>
+        {/foreach}
+    </div> <!-- end notifications -->
+
+    <div id="new_friends">
+        <div class="header">
+            {'new_friends_requests'|lang}
+            <span class="close">x</span>
+        </div>
+        <ul>
+            {foreach from=$user->getPendingFriends() item=request}
+            <li data-friend-id="{$request.user_id}">
+                <div class="info">
+                    <img src="{$request.img}" target="_blank">
+                    <span class="name"><a href="{$request.url}">{$request.friend_name}</a></span>
+                    <span class="city">{$request.city}</span>
+                </div>
+                <div class="request_message">
+                    <div class="request_message_more">...<span>{'more'|lang}</span></div>
+                    <div class="request_message_content">{$request.message}</div>
+                </div>
+                <div class="button-box">
+                    {if $request.status eq 'accepted'}
+                    <a class="qvbutton confirm" href="#">{'okay'|lang}</a>
+                    {else}
+                    <a class="deny" href="#">{'No'|lang}</a>
+                    <a class="qvbutton accept" href="#">{'Yep!'|lang}</a>
+                    {/if}
+                </div>
+            </li>
+            {/foreach}
+        </ul>
+    </div> <!-- end new_friends -->
+
+    <script id="confirm_add_friend_confirmation_box_html" language="text">
+        <div id="add_friend_confirmation">
+            <div id="confirm_box">
+                <div>
+                    <button id="add_friend_cancel_top">X</button>
+                    Add New Buddy
+                </div>
+            </div>
+        </div>
+        <h2>Say g'day to your new buddy!</h2>
+        <textarea id="add_friend_content">{'confirm_add_buddy_placeholder'|lang}</textarea><br>
+        <button id="add_friend_cancel" class="button">Cancel</button>
+        <button id="add_friend_submit" class="button">Submit</button>
+    </script>
+
+<script id="add_friend_confirmation_box_html" language="text">
+    <div id="add_friend_confirmation">
+        <div id="confirm_box">
+            <div>
+                <button id="add_friend_cancel_top">X</button>
+                Add New Buddy
+            </div>
+        <h2>Say something so this person gets the idea what kind of buddy they are making!</h2>
+        <textarea id="add_friend_content">{'add_buddy_placeholder'|lang}</textarea>
+        <br>
+        <button id="add_friend_cancel" class="button">Cancel</button>
+        <button id="add_friend_submit" class="button">Submit</button>
+        </div>
+    </div>
+</script>
+
+    <script id="love_html" language="text">
+        <div id="background">
+            <div id="love_people">
+                <div class="header"> The Lovers <img src="/images/lips.png" title="Love"> <button class="close">X</button></div>
+                <div class="list"><ul></ul></div>
+            </div>
+        </div>
+    </script>
+    {profiler}
+</body>
+</html>

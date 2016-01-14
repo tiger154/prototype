@@ -1,0 +1,49 @@
+<div id="vine_left">
+    {include file="profile/menu.html"}
+</div>
+
+<div id="vine_center">
+    <div id="lv_top" class="subpage">
+        <div class="title"><span>{$title}<span></div>
+        <div class="addbar"></div>
+        <div class="favFolders">
+            <form id="favorite_filter" action="/favourites/">
+                <input type="hidden" name="tag" id="tag">
+                <div class="tree_manage">{$folder} <i class="fa fa-chevron-down right"></i> </div>
+                <div class="favorite_tag_tree" >
+                    <div class="inner">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="posts">
+        {include file="central/posts.html"}
+    </div>
+    <div id="appearing_thing" style="display:none;"><i class="fa fa-refresh fa-spin"></i></div>
+</div>
+
+<div id="vine_right">
+    {include file="ads/rotate.html"}
+</div>
+
+<link rel="stylesheet" href="/js/jquery/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="/css/favourites.css" type="text/css">
+
+<script type="text/javascript">
+    var post_offset={$post_offset};
+</script>
+
+<link href="/css/video-js.css" rel="stylesheet">
+<script type="text/javascript" src="/js/video/video.js"></script>
+<script type="text/javascript" src="/js/video/plugins/youtube.js"></script>
+<script type="text/javascript" src="/js/video/plugins/vimeo.js"></script>
+<script type="text/javascript" src="/js/video/plugins/soundcloud.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.collapser.min.js"></script>
+<script type="text/javascript" src="/js/posts.js"></script>
+<script type="text/javascript" src="/js/comments.js"></script>
+<script type="text/javascript" src="/js/users.js"></script>
+<script type="text/javascript" src="/js/favourites.js"></script>
+<script type="text/javascript" src="/js/jquery/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+<script type="text/javascript" src="/js/jquery/zTree_v3/js/jquery.ztree.exedit-3.5.js"></script>

@@ -1,0 +1,27 @@
+<!-- core switches -->
+<ul id="menu_core_switches">
+    <li><a href="/central/">{'the feed'|lang}</a></li>
+    <li><i class="flaticon-calendaricons"></i><a href="/events/">{'events'|lang}</a></li>
+    <li><i class="flaticon-user163"></i><a href="/people/">{'people'|lang}</a></li>
+    <li><i class="flaticon-irregular14"></i><a href="/pages/">{'pages'|lang}</a></li>
+</ul>
+
+<ul id="profile_menu">
+    <li><a href="/profile/view/{$profile->profile_url}">{'posts'|lang|capitalize}</a></li>
+    <li><a href="/profile/friends/{$profile->profile_url}">{'friends'|lang} {$stats['friends']}</a></li>
+    {if $profile->isMyProfile()}
+    <li><a href="/messages/">{'messages'|lang}</a></li>
+    <li><a href="/favourites/">{'favourites'|lang}</a> {$stats['favorites']}</li>
+    <li><a href="/profile/meeyeing/{$profile->profile_url}">{'me eyeing'|lang} {$stats['eyeing']} </a></li>
+    <li><a href="/profile/eyeingme/{$profile->profile_url}">{'eyeing me'|lang} {$stats['eyeingMe']} </a></li>
+    {/if}
+</ul>
+
+<script type="text/javascript">
+    // set active menus
+    $(document).ready(function() {
+        var menu_active = window.location.pathname;
+        $("#profile_menu a[href='"+menu_active+"']").css('font-weight','bold');
+    });
+
+</script>

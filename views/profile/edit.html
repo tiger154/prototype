@@ -1,0 +1,566 @@
+{if !$initial_profile}
+<div id="vine_left">
+    {include file="profile/menu.html"}
+</div>
+{/if}
+
+<div id="pageEdit">
+    <form id="pageAddForm" action="#" style="display:none;" enctype="multipart/form-data">
+        <div>
+            <h3>You</h3>
+            <section>
+                <h2>About gorgeous you</h2>
+                <fieldset class="contactInformation">
+                    <label>{'name'|lang}* (max 50 characters)</label>
+                    <input type="text" name="profile[name]" value="{$profile->name}" autocomplete="off" placeholder="We don't mind what you call yourself" required="required"/><br/>
+                     <label>{'date_of_birth'|lang}*</label>
+                    <input type="text" name="profile[dob]" id="fields_dob" value="{$profile->dob}" required="required"/><br/>
+                    <label>{'profile_city'|lang}*</label>
+                    <input type="text" name="living_city" id="living_city" placeholder="City, town, village" class="country_city" value="{$profile->getCity('as_text', $profile->city)}" required="required" /> <img src="/images/loading.gif" id="living_city_loading" style="display:none;"/><br/>
+                    <input type="hidden" name="profile[city]" id="fields_city" value="{$profile->city}" autocomplete="off" />
+                    <label>{'profile_city_feed'|lang}*</label>
+                    <input type="text" name="feed_city" id="feed_city" placeholder="City, town, village" class="country_city" value="{$profile->getCity('as_text', $profile->city_feed)}" required="required"  /> <img src="/images/loading.gif" id="feed_city_loading" style="display:none;"/><br/>
+                    <input type="hidden" name="profile[city_feed]" id="fields_city_feed" value="{$profile->city_feed}" autocomplete="off" />
+                </fieldset>
+                <p style="padding: 10px 75px 20px 20px; font-size: 11px;">If you live in a city, enter the city you "Live in" here (same as what you entered above).<br /><br />BUT, if you live in a village, town or very small city, you might want to post in the Feed of a bigger city near you.<br />You would do this because there are more people there to share stuff with.<br /><br />SO, if you want more people to see your public posts, choose the next biggest city closest to you, so you still feel like a local there. You can change this later in your "edit profile" if you like, up to 5 times per year.</p>
+
+                <fieldset class="contactInformation">
+                    <label>I'm looking for...*</label>
+                    <select name="profile[looking_for][]" multiple class="select2">
+                    {foreach from=$profile->getLookingFor() item=o}
+                        <option value="{$o.id}"{if $o.checked} selected="selected"{/if} />{$o.label|htmlentities}</option>
+                    {/foreach}
+                    </select>
+                    <p>Be found in a specific search. And help people know more about you. </p>
+                </fieldset>
+                <p class="compulsory">* compulsory</p>
+            </section>
+            <h3>Stuff</h3>
+            <section>
+            <h2>Some more basics</h2>
+             <p>It's a big, mixed community and sometimes people like to connect with specific folk so we need to ask these questions. The more we know, the easier it is to meet the people you're looking for...</p>
+                <fieldset  class="contactInformation">
+                    <label>{'profession'|lang}*</label>
+                    <select name="profile[professions][]" multiple required="required" class="select2" data-tags="true">
+                        {foreach from=$profile->getProfessions() item=group key="groupname"}
+                        <optgroup label="{$groupname}">
+                        {foreach from=$group item=p}
+                            <option value="{$p.id}"{if $p.checked} selected="selected"{/if}>{$p.label}</option>
+                        {/foreach}
+                        </optgroup>
+                        {/foreach}
+                    </select>
+                </fieldset>
+                <fieldset id="professionGroups" style="display:none;">
+                    <legend>Would you like to join the global group of the professions you have chosen?</legend>
+                    <p>Link up with other people around the world doing the same thing as you</p>
+                </fieldset>
+                 <fieldset class="contactInformation">
+                    <label>{'sexual_orientation'|lang}*</label>
+                    <select name="profile[sexual_orientation]" class="select2" required="required">
+                        {foreach from=$profile->getSexualOrientations() item=option}
+                        <option value="{$option.value}"{if $option.checked} selected="selected"{/if}>{$option.label|lang}</option>
+                        {/foreach}
+                    </select><br/>
+                    <label>{'relationship_status'|lang}</label>
+                    <select name="profile[relationship_status]" id="fields_relationship_status" class="select2">
+                        {foreach from=$profile->getRelationships() item=option}
+                        <option value="{$option.value}"{if $option.checked} selected="selected"{/if}>{$option.label|lang}</option>
+                        {/foreach}
+                    </select><br/>
+                    <label>{'gender'|lang}*</label>
+                    <select name="profile[gender]" class="select2" required="required">
+                        {foreach from=$profile->getGenders() item=option}
+                        <option value="{$option.value}"{if $option.checked} selected="selected"{/if}>{$option.label|lang}</option>
+                        {/foreach}
+                    </select><br/>
+                    <p>If you identify as genderless, gender fluid, agendered, androgyne or anything else, we're sorry that we pushed you into using the “Genderqueer” box. We had to do that to make it easier to find people.</p>
+                    <p>If you're a drag king/queen or other version of you, you'll be better off joining now as your real self and starting a “Personality” page in PIZZAZZ for your alter ego.</p>
+            </section>
+            <h3>Looks</h3>
+            <section>
+                <h2>{'Choose your profile & header pictures'|lang|capitalize}</h2>
+                <h3  class="ProfilePictures">{'Choose your profile picture'|lang|capitalize}</h3>
+                <div id="uploadProfileImage">
+                    <input class="imageInput" style="display: none;" type="file" />
+                    <div class="imageDisplay"><img src="{$profile->getProfileImage()}" /></div>
+                    <div class="imageActions clearfix">
+                        <div class="imageRemoveButton" style="display:{if $profile->hasProfileImage()}block{else}none{/if};"><i class="fa fa-trash"></i><br/>{'remove image'|lang|capitalize}</div>
+                        <div class="imageUploadButton"><i class="fa fa-upload"></i><br/>{'upload image'|lang|capitalize}</div>
+                        <div class="imageCancelButton"><i class="fa fa-undo"></i><br/>{'cancel'|lang|capitalize}</div>
+                        <div class="imageSaveButton"><i class="fa fa-check"></i><br/>{'save image'|lang|capitalize}</div>
+                        <div class="imagePreviewSmall"></div>
+                    </div>
+                    <div class="imageEditor">
+                        <img class="imagePreview" />
+                        <div class="imageEditorButtons">
+                            <div class="bar">
+                                <div class="group">
+                                  <button title="Move" data-option="move" data-method="setDragMode" type="button"><i class="fa fa-arrows"></i></button>
+                                  <button title="Crop" data-option="crop" data-method="setDragMode" type="button"><i class="fa fa-crop"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Zoom In" data-option="0.1" data-method="zoom" type="button"><i class="fa fa-search-plus"></i></button>
+                                  <button title="Zoom Out" data-option="-0.1" data-method="zoom" type="button"><i class="fa fa-search-minus"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Move Left" data-second-option="0" data-option="-10" data-method="move" type="button"><i class="fa fa-arrow-left"></i></button>
+                                  <button title="Move Right" data-second-option="0" data-option="10" data-method="move" type="button"><i class="fa fa-arrow-right"></i></button>
+                                  <button title="Move Up" data-second-option="-10" data-option="0" data-method="move" type="button"><i class="fa fa-arrow-up"></i></button>
+                                  <button title="Move Down" data-second-option="10" data-option="0" data-method="move" type="button"><i class="fa fa-arrow-down"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Rotate Left" data-option="-45" data-method="rotate" type="button"><i class="fa fa-rotate-left"></i></button>
+                                  <button title="Rotate Right" data-option="45" data-method="rotate" type="button"><i class="fa fa-rotate-right"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Reset" data-method="reset" type="button"><i class="fa fa-refresh"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="ProfilePictures">{'choose your header picture'|lang|capitalize}</h3>
+                <div id="uploadHeaderImage">
+                    <div class="clearfix">
+                    <input class="imageInput" style="display: none;" type="file" />
+                        <div class="imageDisplay"><img src="{$profile->getHeaderImage()}" /></div>
+                        <div class="imagePreviewSmall"></div>
+                        <div class="imageActions clearfix">
+                            <div class="imageRemoveButton" style="display:{if $profile->hasHeaderImage()}block{else}none{/if};"><i class="fa fa-trash"></i><br/>{'remove image'|lang|capitalize}</div>
+                            <div class="imageUploadButton"><i class="fa fa-upload"></i><br/>{'upload image'|lang|capitalize}</div>
+                            <div class="imageCancelButton"><i class="fa fa-undo"></i><br/>{'cancel'|lang|capitalize}</div>
+                            <div class="imageSaveButton"><i class="fa fa-check"></i><br/>{'save image'|lang|capitalize}</div>
+                        </div>
+                    </div>
+                    <div class="imageEditor">
+                        <img class="imagePreview" />
+                            <div class="imageEditorButtons">
+                            <div class="bar">
+                                <div class="group">
+                                  <button title="Move" data-option="move" data-method="setDragMode" type="button"><i class="fa fa-arrows"></i></button>
+                                  <button title="Crop" data-option="crop" data-method="setDragMode" type="button"><i class="fa fa-crop"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Zoom In" data-option="0.1" data-method="zoom" type="button"><i class="fa fa-search-plus"></i></button>
+                                  <button title="Zoom Out" data-option="-0.1" data-method="zoom" type="button"><i class="fa fa-search-minus"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Move Left" data-second-option="0" data-option="-10" data-method="move" type="button"><i class="fa fa-arrow-left"></i></button>
+                                  <button title="Move Right" data-second-option="0" data-option="10" data-method="move" type="button"><i class="fa fa-arrow-right"></i></button>
+                                  <button title="Move Up" data-second-option="-10" data-option="0" data-method="move" type="button"><i class="fa fa-arrow-up"></i></button>
+                                  <button title="Move Down" data-second-option="10" data-option="0" data-method="move" type="button"><i class="fa fa-arrow-down"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Rotate Left" data-option="-45" data-method="rotate" type="button"><i class="fa fa-rotate-left"></i></button>
+                                  <button title="Rotate Right" data-option="45" data-method="rotate" type="button"><i class="fa fa-rotate-right"></i></button>
+                                </div>
+                                <div class="group">
+                                  <button title="Reset" data-method="reset" type="button"><i class="fa fa-refresh"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <h3>Social</h3>
+            <section>
+                <h2>Contact-ability</h2>
+                <p>Make it easy to connect with who you want around the world.</p>
+                <fieldset  class="contactInformation" style="margin-bottom: 10px;">
+                    <label>{'profile_languages'|lang}</label>
+                    <select name="profile[languages][]" multiple class="select2">
+                    {foreach from=$profile->getLanguages() item=o}
+                        <option value="{$o.id}"{if $o.checked} selected="selected"{/if} />{$o.label|htmlentities}</option>
+                    {/foreach}
+                    </select>
+                </fieldset>
+                <fieldset class="contactInformation" style="margin-bottom: 10px;">
+                    <label>I Like...</label>
+                    <select name="profile[interests][]" multiple class="select2" data-tags="true">
+                        {foreach from=$profile->getInterests() item=o}
+                        <option value="{$o.id}"{if $o.checked} selected="selected"{/if} />{$o.label|htmlentities}</option>
+                        {/foreach}
+                    </select>
+                </fieldset>
+                <label>Have you got more to say about yourself?</label>
+                    <textarea name="profile[description]">{$profile->description}</textarea>
+                </fieldset>
+            </section>
+        </div>
+    </form>
+</div>
+
+
+<!-- third party css -->
+<link rel="stylesheet" type="text/css" href="/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery-ui.theme.css" />
+<link rel="stylesheet" type="text/css" href="/css/jquery.steps.css" />
+<link rel="stylesheet" type="text/css" href="/css/select2.css" />
+<!-- queeraz css -->
+<link rel="stylesheet" type="text/css" href="/css/pagesWizard.css" />
+<link rel="stylesheet" type="text/css" href="/css/pagesEdit.css" />
+<link rel="stylesheet" type="text/css" href="/css/cropper.css">
+
+ <!-- third party javascript -->
+<script src="/js/jquery/jquery.min.js?v={$cssversion}"></script>
+<script src="/js/jquery/jquery-ui.min.js?v={$cssversion}"></script>
+<script src="/js/plugins/jquery.validate.min.js"></script>
+<script src="/js/plugins/jquery.steps.min.js"></script>
+<script src="/js/plugins/select2.min.js"></script>
+<script src="/js/plugins/cropper.js"></script>
+<script src="/js/plugins/jquery.qie.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    $('.group').buttonset();
+
+    $.validator.addMethod(
+        "regex",
+        function(value, element, regexp) {
+            var re = new RegExp(regexp);
+            return this.optional(element) || re.test(value);
+        },
+        "Only letters, spaces and dashes allowed. Please check your input."
+    );
+
+    var form = $('#pageAddForm');
+    // add wizard
+    form.children('div').steps({
+        headerTag: "h3",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        onStepChanging: function (event, currentIndex, newIndex) {
+            if (currentIndex > newIndex) {
+                return true;
+            }
+            form.validate().settings.ignore = ":disabled,:hidden";
+            return form.valid();
+            //return true;
+        },
+        onFinishing: function (event, currentIndex) {
+            form.validate().settings.ignore = ":disabled";
+            //return form.valid();
+            return true;
+        },
+        onFinished: function (event, currentIndex) {
+            // submit
+            form.submit();
+        }
+    });
+    // add validation
+    form.validate({
+        errorElement: 'div',
+        errorPlacement: function (error, element) {
+            if( $(element).parent().hasClass('contactInformation') ) {
+                error.insertAfter(element);
+            } else {
+                error.insertBefore(element);
+            }
+        },
+        rules: {
+            'profile[name]': {
+                required: true,
+                maxlength: 50
+            },
+            'profile[description]': {
+                required: false,
+                maxlength: 500
+            },
+            'profile[personal_types][]': {
+                required: false,
+                regex: "[0-9a-zA-Z-\s]+$"
+            },
+            'profile[professions][]': {
+                required: true,
+                regex: "[0-9a-zA-Z-\s]+$"
+            },
+            'profile[interests][]': {
+                required: false,
+                regex: "[0-9a-zA-Z-\s]+$"
+            },
+        },
+        messages: {
+            'profile[name]': "Please specify your name",
+            'living_city': "Please specify the city you live in",
+            'feed_city': "Please specify the city you want to post in",
+            'profile[dob]': "Please specify your birth date",
+            'profile[email]': {
+                required: "We need your email address to contact you when necessary",
+                email: "Your email address must be in the format of name@domain.com"
+            },
+            'profile[professions][]': {
+                required: "Please specify your profession(s)",
+                regex: "Only (latin) letters, spaces and dashes are allowed"
+            },
+        },
+        invalidHandler: function(form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                var message = errors == 1
+                ? 'Please correct the following error:\n'
+                : 'Please correct the following ' + errors + ' errors.\n';
+                var errors = "";
+                if (validator.errorList.length > 0) {
+                    for (x=0;x<validator.errorList.length;x++) {
+                        errors += "\n\u25CF " + validator.errorList[x].message;
+                    }
+                }
+                alert(message + errors);
+            }
+            validator.focusInvalid();
+        },
+        submitHandler: function (form) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                dataType: "json",
+                url: "/profile/save",
+                data: $(form).find(':input[name^=profile]').serialize(),
+                success: function (res) {
+                    if(res.success) {
+                        alert(res.msg);
+                        window.location.href = "{$profile->getProfileUrl()}";
+                    } else {
+                        $.each(res.error, function(i,v) {
+                            alert(v);
+                        });
+                    }
+                }
+            });
+            return false; // required to block normal submit since you used ajax
+        }
+    });
+    // show wizard
+    form.fadeIn('fast');
+
+    // nice select / dropdowns
+    $('.select2').select2({
+        width: '300px',
+        tags: false,
+        //tokenSeparators: [',',' '],
+        createTag: function (params) {
+            if(params.term.match(/^[A-Za-z]+[A-Za-z\s]*$/)) {
+                var term = params.term.replace(/\s\s+/g,' ').replace(/[^a-zA-Z\s]/g,'').toLowerCase().trim(); // trim, remove special chars and lowercase
+                term = term.charAt(0).toUpperCase() + term.substring(1); // first to uppercase
+                return {
+                    id: term,
+                    text: term,
+                    newOption: true
+                }
+            }
+        },
+        templateResult: function (data) {
+            var $result = $("<span></span>");
+            $result.text(data.text);
+            if (data.newOption) {
+                $result.append(" <em>(click to add)</em>");
+            }
+            return $result;
+        }
+    });
+
+    $('select[name="profile[professions][]"]').on('change', function(event, params) {
+
+        /*
+        if(params.selected) {
+            var label = $(this).find('option[value="'+params.selected+'"]').html();
+            $('#professionGroups').append('<div class="prof_'+params.selected+' clearfix"><strong>Yep</strong>, I\'d love to join the <u>global</u> <span>'+label+'</span> group<input name="profile[join_groups][]" type="checkbox" value="'+params.selected+'" checked="checked"/>').show();
+        }
+        if(params.deselected) {
+            $('#professionGroups .prof_'+params.deselected).remove();
+            if($('#professionGroups').children('[class^="prof_"]').length == 0) {
+                $('#professionGroups').hide();
+            }
+        }*/
+    });
+
+    // dob datepicker
+    $('#fields_dob').datepicker({
+        dateFormat: "yy-mm-dd",
+        maxDate: "-18y",
+        minDate: "-110y",
+        yearRange: "c-120:c+19",
+        changeYear: true,
+        changeMonth: true
+    });
+
+    // image uploaders
+    $('#uploadHeaderImage').qie({
+        formNameNew:"imageHeaderNew",
+        formNameRemove:"imageHeaderRemove",
+        width:584,
+        height:280,
+        removeUrl:"/profile/deleteHeaderImage",
+        saveUrl:"/profile/saveHeaderImage"
+    });
+
+    $('#uploadProfileImage').qie({
+        formNameNew:"imageProfileNew",
+        formNameRemove: "imageProfileRemove",
+        width:100,
+        height:100,
+        removeUrl:"/profile/deleteProfileImage",
+        saveUrl:"/profile/saveProfileImage"
+    });
+
+    var living_city_open = false;
+    $("#living_city").autocomplete({
+        source: "/locations/search",
+        minLength: 2,
+        search: function() { living_city_open = true; $('#living_city_loading').show(); },
+        open: function() { $('#living_city_loading').hide(); },
+        select: function(event, ui) {
+            living_city_open = false;
+            $('#fields_city').val(ui.item.code);
+            if ($('#feed_city').val() == '') {
+                // automatically fill in feed city when empty
+                $('#feed_city').val(ui.item.label);
+                $('#fields_city_feed').val(ui.item.code);
+            }
+        }
+    });
+
+    $('#living_city').change(function() {
+        if (living_city_open) {
+            $('#fields_city').val('');
+            alert("Location not found. Please select a city from the list.");
+        }
+    });
+
+    var birth_city_open = false;
+    $("#birth_city").autocomplete({
+        source: "/locations/search",
+        minLength: 2,
+        search: function() { birth_city_open=true; $('#birth_city_loading').show(); },
+        open: function() { $('#birth_city_loading').hide(); },
+        select: function(event, ui) {
+            birth_city_open=false;
+            $('#fields_city_of_birth').val(ui.item.code);
+        }
+    });
+
+    $('#birth_city').change(function() {
+        if (birth_city_open) {
+            $('#fields_city_of_birth').val('');
+            alert("Location not found. Please select a city from the list.");
+        }
+    });
+
+    var feed_city_open = false;
+    $("#feed_city").autocomplete({
+        source: "/locations/search",
+        minLength: 2,
+        search: function() { feed_city_open=true; $('#feed_city_loading').show(); },
+        open: function() { $('#feed_city_loading').hide(); },
+        select: function(event, ui) {
+            feed_city_open = false;
+            $('#fields_city_feed').val(ui.item.code);
+        }
+    });
+    $('#feed_city').change(function() {
+        if (feed_city_open) {
+            $('#fields_city_feed').val('');
+            alert("Location not found. Please select a city from the list.");
+        }
+    });
+
+    // page category selections
+    $('#pageCategories').on('click', '.pageCategory', function() {
+        var cats = $.map($('#pagePickedCategories div'), function(el) { return $(el).data('cid'); });
+        if(cats.length >= 10) { // no free slots
+            $('#pageCategoryErrors').html('U reached max topics! Click on one to remove it.').fadeIn('fast').delay(2000).fadeOut('slow');
+        } else if($.inArray($(this).data('cid'), cats) > -1) { // duplicate
+            $('#pageCategoryErrors').html($(this).data('cid')+' is already in your list!').fadeIn('fast').delay(2000).fadeOut('slow');
+        } else { // add it
+            $('#pagePickedCategories').append($(this).append('<input type="hidden" name="page[categories][]" value="'+$(this).data('cid')+'" />'));
+            if($(this).hasClass('parent')) {
+                $('#pageCategories .parent').hide();
+                $.post('/pages', 'action=get_children_categories&pid='+$(this).data('pid'), function(res) {
+                    $.each(res, function(k, i) {
+                        $('#pageCategories').append('<div class="pageCategory child" data-cid="'+i.label+'">'+i.label+'</div>');
+                    });
+                    $('#pageCategories').append('<div id="pageCategoryLevelUp">Back to main topics</div>');
+                }, 'json');
+            }
+        }
+        return false;
+    });
+
+    // page category level up button
+    $(document.body).on('click', '#pageCategoryLevelUp', function() {
+        $('#pageCategories .child').fadeOut('fast').remove();
+        $(this).remove();
+        $('#pageCategories .parent').fadeIn('fast');
+    });
+
+    // page category removal
+    $('#pagePickedCategories').on('click', '.pageCategory', function() {
+        if($(this).hasClass('noback')) {
+            $(this).remove(); // just remove it
+        } else if($('#pageCategories > :hidden').length && $(this).hasClass('parent')) {
+            $(this).hide().prependTo($('#pageCategories')).children('input').remove(); // add back to parent suggestion list (hidden)
+        } else {
+            $(this).prependTo($('#pageCategories')).children('input').remove(); // add back to children suggestion list
+        }
+        return false;
+    });
+
+    <!-- select/add categories to list by using autocomplete search -->
+    $('#pageAddForm .categorySearch').autocomplete({
+        minLength: 2,
+        source: '/pages?action=search_categories',
+        response: function (event, ui) {
+            if (ui.content.length == 0) {
+                ui.content.push({
+                    label: "Add as new topic(s): " + $(this).val(),
+                    value: $(this).val(),
+                    id:0
+                });
+            }
+        },
+        autoFocus: true,
+        focus: function() {
+            return false;
+        },
+        select: function (event, ui) {
+            this.value = "";
+            var new_topics = ui.item.value.split(/,/);
+            var current_topics = $.map($('#pagePickedCategories div'), function(el) { return $(el).data('cid'); });
+            $.each(new_topics, function(i, v) {
+                if(current_topics.length >= 10) { // no free slots
+                    $('#pageCategoryErrors').html('U reached max topics! Click on one to remove it.').fadeIn('fast').delay(2000).fadeOut('slow');
+                } else if($.inArray(v, current_topics) > -1) { // check for dup(s)
+                    $('#pageCategoryErrors').html(v+' is already in your list!').fadeIn().delay(2000).fadeOut('slow');
+                } else if (v.length < 3) { // tag to short
+                    $('#pageCategoryErrors').html(v+' is to short. 3 char\'s. minimum!').fadeIn().delay(2000).fadeOut('slow');
+                } else if (v.length > 40) { // tag to long
+                    $('#pageCategoryErrors').html(v+' is to long. 40 char\'s. max!').fadeIn().delay(2000).fadeOut('slow');
+                } else { // add topic(s)
+                    if(ui.item.id == 0) { // new topic(s)
+                        var topic = v.replace(/[^a-zA-Z &-]/g,'').toLowerCase().trim(); // remove whitespace and all to lowercase
+                        topic = topic.charAt(0).toUpperCase() + topic.substring(1); // remove whitespace and all to lowercase
+                        if(topic && topic.length > 2) {
+                            $('#pagePickedCategories').append('<div class="pageCategory noback" data-cid="'+topic+'">'+topic+'<input type="hidden" name="page[newcategories][]" value="'+topic+'" />');
+                        } else {
+                            $('#pageCategoryErrors').html('"'+v+'" is wrongly formatted. (Only "a-zA-Z&- " chars are allowed!').fadeIn().delay(2000).fadeOut('slow');
+                        }
+                    } else {
+                        $('#pagePickedCategories').append('<div class="pageCategory noback" data-cid="'+ui.item.label+'">'+ui.item.label+'<input type="hidden" name="page[categories][]" value="'+ui.item.label+'" />');
+                    }
+                }
+            });
+            return false;
+        }
+    });
+
+    $('#right_filler').css({
+        "margin-left": "188px",
+        "width": "772px"
+    });
+
+});
+</script>
+

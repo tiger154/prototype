@@ -1,0 +1,51 @@
+<div id="vine_left">
+    {include file="profile/menu.html"}
+</div>
+
+<div id="vine_center">
+
+    <div id="lv_top" class="subpage">
+        <div class="title"><span>{$title}<span></div>
+    </div>
+
+    <div id="list_people">
+        <ul class="items">
+        {foreach from=$users item=person}
+        <li>
+            <div class="thumb"><img src="{$person->getProfileImage(100,100)}" /></div>
+            <div class="details">
+                <a class="strongRed" href="{$person->getProfileUrl()}">{$person->getName()}</a>
+                <span class="waar">{$person->getCity('short=true')}</span>
+            </div>
+            <div class="actions">
+                <div class="stats">
+                    {"friends"|lang} {$person->friends} <br />
+                    {"eyeing me"|lang} {$person->eyeingMe}<br />
+                    {if $person->usertype == 'profile'}{"endorsed"|lang|capitalize} {$person->getEndorseCount()}{/if}
+                </div>
+                <span>
+                    <a href="#eye" class="eyeing tooltip animate" title="{if $person->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}" data-uid="{$person->user_id}" data-tip="{if $person->isEyeingMe()}{'eyeing me'|lang}{else}{'eye me'|lang}{/if}">
+                        <img class="{if $person->isEyeingMe()} checked{/if}" src="/images/_.gif"/>
+                    </a>
+                </span>
+                <span>
+                    <a href="#" class="button_friends click_to_add_buddy tooltip animate"{if $person->isFriend()=='accepted'||$person->isFriend()=='pending'} disabled="disabled"{/if} data-checkout="{$person->user_id}" data-tip="{if $person->isFriend()=='accepted'}{'were_friends'|lang}{elseif $person->isFriend()=='pending'}{'friends_request_sent'|lang}{else}{'add_to_friends'|lang}{/if}">
+                        <i class="flaticon-user163{if $person->isFriend()=='accepted'} accepted{/if}{if $person->isFriend()=='pending'} pending{/if}"></i></a>
+                    </a>
+                </span>
+                <span>
+                    <a href="#" class="button_message_me tooltip animate" data-tip="{'message_me'|lang}" data-uid="{$person->user_id}"><i class="flaticon-envelope32 "></i></a>
+                </span>
+                <span>
+                    <a href="#" class="button_nudge_me tooltip animate" data-tip="{'send_pulse'|lang}" data-uid="{$person->user_id}"><i class="fa fa-bolt"></i></a>
+                </span>
+            </div>
+        </li>
+        {/foreach}
+        </ul>
+    </div>
+</div>
+
+<div id="vine_right">
+    {include file="ads/rotate.html"}
+</div>
