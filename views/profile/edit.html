@@ -216,7 +216,6 @@
 $(document).ready(function() {
 
     $('.group').buttonset();
-
     $.validator.addMethod(
         "regex",
         function(value, element, regexp) {
@@ -280,7 +279,7 @@ $(document).ready(function() {
             'profile[interests][]': {
                 required: false,
                 regex: "[0-9a-zA-Z-\s]+$"
-            },
+            }
         },
         messages: {
             'profile[name]': "Please specify your name",
@@ -294,7 +293,7 @@ $(document).ready(function() {
             'profile[professions][]': {
                 required: "Please specify your profession(s)",
                 regex: "Only (latin) letters, spaces and dashes are allowed"
-            },
+            }
         },
         invalidHandler: function(form, validator) {
             var errors = validator.numberOfInvalids();
@@ -336,11 +335,10 @@ $(document).ready(function() {
     // show wizard
     form.fadeIn('fast');
 
-    // nice select / dropdowns
+    // select / dropdowns
     $('.select2').select2({
         width: '300px',
         tags: false,
-        //tokenSeparators: [',',' '],
         createTag: function (params) {
             if(params.term.match(/^[A-Za-z]+[A-Za-z\s]*$/)) {
                 var term = params.term.replace(/\s\s+/g,' ').replace(/[^a-zA-Z\s]/g,'').toLowerCase().trim(); // trim, remove special chars and lowercase
@@ -362,22 +360,7 @@ $(document).ready(function() {
         }
     });
 
-    $('select[name="profile[professions][]"]').on('change', function(event, params) {
-
-        /*
-        if(params.selected) {
-            var label = $(this).find('option[value="'+params.selected+'"]').html();
-            $('#professionGroups').append('<div class="prof_'+params.selected+' clearfix"><strong>Yep</strong>, I\'d love to join the <u>global</u> <span>'+label+'</span> group<input name="profile[join_groups][]" type="checkbox" value="'+params.selected+'" checked="checked"/>').show();
-        }
-        if(params.deselected) {
-            $('#professionGroups .prof_'+params.deselected).remove();
-            if($('#professionGroups').children('[class^="prof_"]').length == 0) {
-                $('#professionGroups').hide();
-            }
-        }*/
-    });
-
-    // dob datepicker
+    // dob date picker
     $('#fields_dob').datepicker({
         dateFormat: "yy-mm-dd",
         maxDate: "-18y",
