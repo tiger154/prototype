@@ -30,10 +30,10 @@ I will explain briefly the process below.
 
 When users first access the website it goes first to 'index.php'
 At line number 80~81 on the index.php is the main starting point of this framework.
-
+```
 $application = new Dispatcher($db);
 $application->run();
-
+```
 ###2. Process 
 
 **1. Routing and Auth : /app/Dispatcher.php and /app/Core.php**
