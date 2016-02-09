@@ -99,7 +99,8 @@ public function share()
  - Key notes
      -> When we use the model we can choose a return type (array, array of object, object)
      -> Data can be selected in an easier manner Posts::findById($this->request['id'])
-     -> We can also use pure SQL $db->run('select * from test')       
+     -> We can also use pure SQL $db->run('select * from test')    
+     -> We can use SQL through Query builder such as Join(left, inner), almost operator(in, not in, ==, !=, or, and)
      
  - On the Collection.php there is a magic method called __callStatic  Through this we can call like this Modal::action()  
 
